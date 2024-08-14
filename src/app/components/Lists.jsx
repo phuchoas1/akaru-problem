@@ -7,63 +7,7 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
-export default function Lists() {
-  const Title = useRef([]);
-  Title.current = [];
-  const myTexts = useRef([]);
-  myTexts.current = [];
-  const pages = useRef([]);
-  pages.current = [];
-
-  useLayoutEffect(() => {
-    Title.current.forEach((char, i) => {
-      gsap.fromTo(
-        char,
-        { y: "100%" },
-        {
-          y: 0,
-          duration: 1,
-          delay: 0.09 * i,
-          ease: CustomEase.create(
-            "custom",
-            "M0,0 C0.126,0.382 0.078,0.818 0.291,0.924 0.444,1 0.818,1.001 1,1"
-          ),
-          scrollTrigger: {
-            trigger: pages.current,
-            start: "top 40%",
-            end: "bottom 30%",
-            markers: true,
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
-    });
-
-    myTexts.current.forEach((text, i) => {
-      text.setAttribute("data-index", i);
-      gsap.fromTo(
-        text,
-        { y: "100%" },
-        {
-          y: 0,
-          duration: 1,
-          delay: 1,
-          ease: CustomEase.create(
-            "custom",
-            "M0,0 C0.126,0.382 0.161,0.8 0.343,0.873 0.579,0.967 0.818,1.001 1,1 "
-          ),
-          scrollTrigger: {
-            trigger: pages.current,
-            start: "top 40%",
-            end: "bottom 30%",
-            markers: true,
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
-    });
-  }, []);
-
+export default function Lists({ Title, myTexts, pages }) {
   const targetRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,
@@ -114,12 +58,11 @@ export default function Lists() {
       {Information.map((info, x, index) => {
         return (
           <div
-            // ref={(el) => (pages.current[index] = el)}
-            // ref={(el) => pages.current.push(el)}
-            // ref={pages}
+            ref={pages}
+            id={info.index}
             key={`d_${index}`}
             className={`shrink-0 bg-[${info.Color}] w-3/4 h-screen origin-bottom-left`} //flex-shrink-0 or shrink-0 !!important
-            style={{ top: -info.index * 50 }}
+            style={{ y: -info.index * 100 }}
           >
             <div
               style={{
@@ -130,10 +73,7 @@ export default function Lists() {
               }}
               className="w-full h-1/2"
             />
-            <div
-              ref={(el) => pages.current.push(el)}
-              className="relative w-full h-1/2 p-[1rem]"
-            >
+            <div className="relative w-full h-1/2 p-[1rem]">
               <div className="absolute w-full h-full flex justify-center place-items-center">
                 <a
                   id="Title"
@@ -141,9 +81,7 @@ export default function Lists() {
                 >
                   {info.Client.split("").map((divide, index) => (
                     <span
-                      // ref={Title}
-                      ref={(el) => myTexts.current.push(el)}
-                      // ref={(el) => (Title.current[index] = el)}
+                      ref={(el) => Title.current.push(el)}
                       key={index}
                       className="inline-block text-[9.6rem] tracking-[-0.02rem] antialiased font-[Alliance]"
                     >
@@ -156,9 +94,7 @@ export default function Lists() {
                 <a className="overflow-hidden">
                   <span
                     id="AppYear"
-                    // ref={myTexts}
                     ref={(el) => myTexts.current.push(el)}
-                    // ref={(el) => (myTexts.current[index] = el)}
                     className="box inline-block rounded-[3rem] shadow-outline-AppYear px-[1.5rem] py-[0.5rem] font-[Alliance] font-semibold text-xl"
                   >
                     {info.Year}
@@ -167,9 +103,7 @@ export default function Lists() {
                 <a className="overflow-hidden flex self-center flex-row-reverse basis-[50%]">
                   <span
                     id="Job"
-                    // ref={myTexts}
                     ref={(el) => myTexts.current.push(el)}
-                    // ref={(el) => (myTexts.current[index] = el)}
                     className="box tracking-tighter font-[Alliance] uppercase text-[0.9rem]"
                   >
                     {info.Job}
@@ -178,9 +112,7 @@ export default function Lists() {
                 <a className="overflow-hidden flex self-center ">
                   <span
                     id="Where"
-                    // ref={myTexts}
                     ref={(el) => myTexts.current.push(el)}
-                    // ref={(el) => (myTexts.current[index] = el)}
                     className="box self-center tracking-tighter font-[Alliance] uppercase text-[0.9rem]"
                   >
                     {info.Where}
@@ -188,13 +120,7 @@ export default function Lists() {
                 </a>
               </div>
               <a className="overflow-hidden">
-                <span
-                  id="Where"
-                  // ref={myTexts}
-                  ref={(el) => myTexts.current.push(el)}
-                  // ref={(el) => (myTexts.current[index] = el)}
-                  className="text absolute bottom-0 p-2"
-                >
+                <span id="Number" className="text absolute bottom-0 p-2">
                   {info.Number}
                 </span>
               </a>
